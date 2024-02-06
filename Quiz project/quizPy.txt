@@ -1,0 +1,5 @@
+How do you declare a function in Python?~def~ function~ define~func
+What does the len() function do in Python?~Returns the length of a list, tuple, or string~Converts a string to lowercase~Rounds a floating-point number to the nearest integer~Returns the largest integer not greater than x
+What is the correct way to open a file named "data.txt" in Python for reading?~file = open("data.txt", "r")~file = open("data.txt", "w")~file = open("data.txt", "a")~file = open("data.txt", "rb")
+hich of the following is not a valid way to start a Python variable name?~1st_variable~_variable~variable1~variable_name
+What is the purpose of the __init__ method in Python classes?~To initialize the class object~To define a new attribute~To call superclass methods~ To delete an object
