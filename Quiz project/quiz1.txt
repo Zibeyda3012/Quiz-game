@@ -1,0 +1,1 @@
+Exception handling nedir?~runtime errorlarin tutulmasi ~obyetin yaradilmasi~obyektin fieldlerinin deyisdirilmesi~compiletime errorlar ~

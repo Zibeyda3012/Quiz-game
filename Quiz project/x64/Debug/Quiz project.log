@@ -1,5 +1,4 @@
 ﻿  Quiz project.cpp
-C:\Users\Zibeyde\source\repos\Quiz project\Quiz project\AllFunctions.h(156,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\Zibeyde\source\repos\Quiz project\Quiz project\AllFunctions.h(754,17): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Zibeyde\source\repos\Quiz project\Quiz project\AllFunctions.h(783,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Quiz project.vcxproj -> C:\Users\Zibeyde\source\repos\Quiz project\x64\Debug\Quiz project.exe
+C:\Users\user\OneDrive - Azerbaijan State Oil and Industry University\Desktop\New folder\Quiz-game\Quiz project\AllFunctions.h(159,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\user\OneDrive - Azerbaijan State Oil and Industry University\Desktop\New folder\Quiz-game\Quiz project\AllFunctions.h(819,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Quiz project.vcxproj -> C:\Users\user\OneDrive - Azerbaijan State Oil and Industry University\Desktop\New folder\Quiz-game\x64\Debug\Quiz project.exe

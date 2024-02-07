@@ -3,8 +3,10 @@
 void start()
 {
 	Admin* NewAdmin = new Admin("Zibeyda Musayeva", "Admin", "admin");
+	int size = 0;
 	q.AddAdmin(NewAdmin);
 	q.ReadQuizNamesFromFile(QuizName_file);
+	q.ReadPlayerResultFromFile(Player_file, size);
 }
 
 void QuizVisuals()
@@ -527,8 +529,8 @@ void MainMenu()
 			{
 				try
 				{
-					q.WriteQuizNamesToFile(QuizName_file);
-					q.WritePLayerResultsToFile(Player_file);
+					//q.WriteQuizNamesToFile(QuizName_file);
+					//q.WritePLayerResultsToFile(Player_file);
 				}
 				catch (exception ex)
 				{

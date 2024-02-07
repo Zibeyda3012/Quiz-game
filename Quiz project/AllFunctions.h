@@ -263,7 +263,20 @@ public:
 		}
 	}
 
-	void WriteQuizNamesToFile(string file)
+	void WriteQuizNamesToFile(string file, string quiz_name)
+	{
+		ofstream quizName_file(file, ios::app);
+
+		if (quizName_file.is_open())
+		{
+			quizName_file << quiz_name << endl;
+			quizName_file.close();
+		}
+
+		else
+			cout << "file couldn't be opened" << endl;
+	}
+	/*void WriteQuizNamesToFile(string file)
 	{
 		ofstream quizName_file(file, ios::out);
 
@@ -280,7 +293,7 @@ public:
 			cout << "file couldn't be opened" << endl;
 			return;
 		}
-	}
+	}*/
 
 	QuizNames** ReadQuizNamesFromFile(string file)
 	{
@@ -593,6 +606,8 @@ public:
 				WriteQuestionsToFile(_quizName);
 				QuizNames* qName = new QuizNames(_quizName);
 				AddQuizNames(qName);
+				WriteQuizNamesToFile(QuizName_file, _quizName);
+
 				return;
 			}
 
@@ -633,30 +648,21 @@ public:
 		player->print();
 	}
 
-	void WritePLayerResultsToFile(string file)
+	void WritePlayerResultoFile(string file, string username, string quiz_name, int correct, int incorrect, int pass)
 	{
-		ofstream f(file, ios::out);
-
+		fstream f(file, ios::app);
 		if (!f.is_open())
 		{
 			cout << "file is not opened" << endl;
 			return;
 		}
+		f << username << "~" << quiz_name << "~" << correct << "~" << incorrect << "~" << pass << "~" << endl;
+		f.close();
 
-		if (players != nullptr)
-		{
-			for (size_t i = 0; i < player_count; i++)
-			{
-				f << players[i]->GetFullName() << "~" << players[i]->GetQuizName() << "~" << players[i]->GetCorrect() << "~" << players[i]->GetIncorrect() << "~" << players[i]->GetPass() << "~" << endl;
-			}
-
-			f.close();
-		}
-		else
-			cout << "players are null";
 	}
 
-	Player** ReadPlayerResultFromFile(string file)
+
+	Player** ReadPlayerResultFromFile(string file, int& size)
 	{
 		{
 			ifstream f(file, ios::in);
@@ -676,6 +682,7 @@ public:
 				while (!f.eof())
 				{
 					getline(f, name, '~');
+					if (f.eof())break;
 					getline(f, qName, '~');
 					getline(f, correct, '~');
 					getline(f, incorrect, '~');
@@ -683,12 +690,14 @@ public:
 
 					Player* player = new Player(name, qName, stoi(correct), stoi(incorrect), stoi(pass));
 					AddPlayer(player);
-
+					size++;
 				}
 
 				f.close();
 				this->player_count = player_count;
+
 				return newPlayers;
+
 			}
 
 			else
@@ -731,45 +740,65 @@ public:
 
 	void printLeaderBoard(string quizName)
 	{
-		int count = 0;
-		int index = 0;
-
-		for (size_t i = 0; i < player_count; i++)
-			if (players[i]->GetQuizName() == quizName)
-				count++;
-
-		Player** newList = new Player * [count];
-
-		for (size_t i = 0; i < player_count; i++)
-			if (players[i]->GetQuizName() == quizName)
-				newList[index++] = players[i];
-
-
-
-		list<Player>LeaderBoard;
-		int iterator = 0;
-
-		for (size_t i = 0; i < 10; i++)
+		fstream f(Player_file, ios::in);
+		if (!f.is_open())
 		{
-			int max = newList[0]->GetCorrect();
-
-			for (size_t k = 0; k < count; k++)
+			cout << "File is not open" << endl;
+			return;
+		}
+		int size = 0;
+		ReadPlayerResultFromFile(Player_file, size);
+		Player** newList = new Player * [size];
+		string qName = "";
+		string name = "";
+		string correct = "";
+		string incorrect = "";
+		string pass = "";
+		int l = 0;
+		while (!f.eof())
+		{
+			getline(f, name, '~');
+			if (f.eof())break;
+			getline(f, qName, '~');
+			getline(f, correct, '~');
+			getline(f, incorrect, '~');
+			getline(f, pass, '~');
+			if (qName != quizName)continue;
+			Player* player = new Player(name, qName, stoi(correct), stoi(incorrect), stoi(pass));
+			newList[l++] = player;
+		}
+		int iterator = 0;
+		for (int i = 0; i < l; i++)
+		{
+			for (int j = 0; j <l- i - 1; j++)
 			{
-				if (newList[k]->GetCorrect() > max)
+				if (newList[j]->GetCorrect() < newList[j + 1]->GetCorrect())
 				{
-					max = newList[k]->GetCorrect();
-					iterator = k;
+					auto temp = newList[j];
+					newList[j] = newList[j + 1];
+					newList[j + 1] = temp;
 				}
 			}
-
-			LeaderBoard.push_back(*newList[iterator]);
-			DeleteElement(newList, count, iterator);
 		}
-
-		for (auto player : LeaderBoard)
+		cout << endl;
+		for (int i = 0; i < 10 && i < l; i++)
 		{
-			cout << player.GetFullName() << "  " << player.GetCorrect() << "  " << player.GetIncorrect() << "  " << player.GetPass() << endl;
+			string name = newList[i]->GetFullName();
+			cout << endl << name;
+			for (int s = 0; s < 10 - (name.size()); s++)
+				cout << " ";
+			cout << (i != 0 ? " " : "");
+			cout << "  " << newList[i]->GetCorrect() << "  "
+				<< newList[i]->GetIncorrect() << "  " << newList[i]->GetPass() << endl;
 		}
+		if (newList)
+		{
+			for (int i = 0; i < l; i++)
+				if (newList[i])
+					delete newList[i];
+			delete[] newList;
+		}
+
 
 	}
 
@@ -1057,6 +1086,7 @@ public:
 							Player* player = new Player(name, quiz_name, correct, incorrect, pass_count);
 							AddPlayer(player);
 							printResult(player);
+							WritePlayerResultoFile(Player_file, name, quiz_name, correct, incorrect, pass_count);
 							system("pause");
 							return;
 						}
@@ -1078,6 +1108,7 @@ public:
 				Player* player = new Player(name, quiz_name, correct, incorrect, pass_count);
 				AddPlayer(player);
 				printResult(player);
+				WritePlayerResultoFile(Player_file, name, quiz_name, correct, incorrect, pass_count);
 				system("pause");
 				return;
 			}
