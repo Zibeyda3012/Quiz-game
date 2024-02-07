@@ -276,24 +276,7 @@ public:
 		else
 			cout << "file couldn't be opened" << endl;
 	}
-	/*void WriteQuizNamesToFile(string file)
-	{
-		ofstream quizName_file(file, ios::out);
 
-		if (quizName_file.is_open())
-		{
-			for (size_t i = 0; i < quiz_count; i++)
-				quizName_file << *(Names[i]) << endl;
-
-			quizName_file.close();
-		}
-
-		else
-		{
-			cout << "file couldn't be opened" << endl;
-			return;
-		}
-	}*/
 
 	QuizNames** ReadQuizNamesFromFile(string file)
 	{
@@ -380,10 +363,11 @@ public:
 
 	//questions
 
-	void Read_Questions_From_File(string file)
+	list<Question> Read_Questions_From_File(string file, int& count)
 	{
+		srand(time(0));
 		ifstream f(file, ios::in);
-
+		list<Question> newQuestion;
 		if (f.is_open())
 		{
 			string question = "";
@@ -399,10 +383,25 @@ public:
 				getline(f, variant_2, '~');
 				getline(f, variant_3, '~');
 				if (f.eof())break;
-
 				Question* q = new Question(question, correct_variant, variant_1, variant_2, variant_3);
-				AddQuestion(q);
+				int a = 1 + rand() % 4;
+				if (a == 1)
+					newQuestion.push_back(*q);
+				else if (a == 2)
+				{
+					if (!newQuestion.empty())
+					{
+						auto it = newQuestion.begin();
+						advance(it, newQuestion.size() / 2);
+						newQuestion.insert(it, *q);
+					}
+					else
+						newQuestion.push_front(*q);
+				}
 
+				else
+					newQuestion.push_front(*q);
+				count++;
 			}
 
 			f.close();
@@ -410,10 +409,9 @@ public:
 
 		else
 		{
-			list<Question> newQuestion;
 			cout << "file is not opened";
-			//return newQuestion;
 		}
+		return newQuestion;
 	}
 
 	void WriteQuestionsToFile(string file)
@@ -770,7 +768,7 @@ public:
 		int iterator = 0;
 		for (int i = 0; i < l; i++)
 		{
-			for (int j = 0; j <l- i - 1; j++)
+			for (int j = 0; j < l - i - 1; j++)
 			{
 				if (newList[j]->GetCorrect() < newList[j + 1]->GetCorrect())
 				{
@@ -813,17 +811,17 @@ public:
 	}
 
 
-	void ShuffleQuestions()
+	list<Question> ShuffleQuestions(list<Question>& newquestion, int count)
 	{
 
 		srand(time(0));
 		list<Question>newlist;
 		list<int>indexes;
 		int counter = 0;
-		while (counter < size)
+		while (counter < count)
 		{
 			bool found = 0;
-			int index = rand() % size;
+			int index = rand() % count;
 			for (auto i : indexes)
 				if (i == index)
 					found = 1;
@@ -837,7 +835,7 @@ public:
 			}
 		}
 
-		questions = newlist;
+		return newlist;
 
 	}
 
@@ -1056,11 +1054,11 @@ public:
 
 		cout << "enter quiz name: ";
 		getline(cin, quiz_name);
+		int count = 0;
+		list<Question>newquestion = Read_Questions_From_File(quiz_name, count);
+		//ShuffleQuestions(newquestion, count);
 
-		Read_Questions_From_File(quiz_name);
-		ShuffleQuestions();
-
-		for (auto i = questions.begin(); i != questions.end();)
+		for (auto i = newquestion.begin(); i != newquestion.end();)
 		{
 			print(*i, pass_count, name);
 			if (checkAnswer(*i, my_answer))
@@ -1072,10 +1070,10 @@ public:
 
 			if (step == 1) //next
 			{
-				if (i != (questions.end()))
+				if (i != (newquestion.end()))
 				{
 					i++;
-					if (i == questions.end())
+					if (i == newquestion.end())
 					{
 						cout << "you have reached the final question,if you want to finish please enter ~next~ or ~submit~,if you want to continue answering questions enter ~previous~" << endl;
 						int a = GameChoiceOptions();
@@ -1099,7 +1097,7 @@ public:
 
 			else if (step == -1) //previous
 			{
-				if (i != questions.begin())
+				if (i != newquestion.begin())
 					i--;
 			}
 

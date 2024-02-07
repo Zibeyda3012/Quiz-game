@@ -1,4 +1,1 @@
-﻿  Quiz project.cpp
-C:\Users\user\OneDrive - Azerbaijan State Oil and Industry University\Desktop\New folder\Quiz-game\Quiz project\AllFunctions.h(159,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\user\OneDrive - Azerbaijan State Oil and Industry University\Desktop\New folder\Quiz-game\Quiz project\AllFunctions.h(819,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Quiz project.vcxproj -> C:\Users\user\OneDrive - Azerbaijan State Oil and Industry University\Desktop\New folder\Quiz-game\x64\Debug\Quiz project.exe
+﻿  Quiz project.vcxproj -> C:\Users\user\OneDrive - Azerbaijan State Oil and Industry University\Desktop\New folder (2)\Quiz-game\x64\Debug\Quiz project.exe
